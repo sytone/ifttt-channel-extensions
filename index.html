@@ -1,58 +1,65 @@
 <!doctype html>
-<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
-<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ifttt-webhook by captn3m0</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
-  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="javascripts/script.js"></script>
+  </head>
+  <body>
 
-  <title>Ifttt-webhook</title>
-  <meta name="description" content="A webhook middleware for the ifttt.com service">
+      <header>
+        <h1>Ifttt-webhook</h1>
+        <p>A webhook middleware for the ifttt.com service</p>
+      </header>
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+      <div id="banner">
+        <span id="logo"></span>
 
-</head>
-
-<body>
-
-  <div class="wrapper">
-    <header>
-      <h1 class="title">Ifttt-webhook</h1>
-    </header>
-    <div id="container">
-      <p class="tagline">A webhook middleware for the ifttt.com service</p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/captn3m0/ifttt-webhook/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/captn3m0/ifttt-webhook/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/captn3m0/ifttt-webhook" class="code">View Ifttt-webhook on GitHub</a>
+        <a href="https://github.com/captn3m0/ifttt-webhook" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/captn3m0/ifttt-webhook/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/captn3m0/ifttt-webhook/tarball/master" class="button">TAR</a></li>
+          </ul>
         </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
-          <p>A webhook middleware for the ifttt.com service</p>
+      </div><!-- end banner -->
 
-<h1>How To Use</h1>
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>How To Use</h1>
 
 <ol>
 <li>Change your ifttt.com wordpress server to <a href="http://ifttt.captnemo.in">http://ifttt.captnemo.in</a>.</li>
 <li>You can use any username/password combination you want. ifttt will accept the authentication irrespective of what details you enter here. These details will be passed along by the webhook as well, so that you may use these as your authentication medium, perhaps.</li>
 <li>Create a recipe in ifttt which would post to your "wordpress channel". In the "Tags" field, use the webhook url that you want to use.</li>
-</ol><p><img src="http://i.imgur.com/5FaU1.png" alt="Screenshot of a channel" title="Sample Channel for use as a webhook"></p>
+</ol><p><img src="http://i.imgur.com/RA0Jb.png" alt="Connecting to ifttt-webhook" title="You can type in any username/password you want"></p>
+
+<p>Any username/password combination will be accepted, and passed through to the webhook url. A blank password is considered valid, but ifttt invalidates a blank username.</p>
+
+<p><img src="http://i.imgur.com/5FaU1.png" alt="Screenshot of a channel" title="Sample Channel for use as a webhook"></p>
+
+<p>Make sure that the url you specify accepts POST requests. The url is only picked up from the tags field, and all other fields are passed through to the webhook url.</p>
 
 <h1>How It Works</h1>
 
-<p>ifttt uses wordpress-xmlrpc to communicate with the wordpress blog. We present a fake-xmlrpc interface on the webadress, which causes ifttt to be fooled into thinking of this as a genuine wordpress blog. The only action that ifttt allows for wordpress are posting, which are instead used for powering webhooks. All the other fields (title, description, categories) along with the username/password credentials are passed along by the webhook.</p>
+<p>ifttt uses wordpress-xmlrpc to communicate with the wordpress blog. We present a fake-xmlrpc interface on the webadress, which causes ifttt to be fooled into thinking of this as a genuine wordpress blog. The only action that ifttt allows for wordpress are posting, which are instead used for powering webhooks. All the other fields (title, description, categories) along with the username/password credentials are passed along by the webhook. Do not use the "Create a photo post" action for wordpress, as ifttt manually adds a <code>&lt;img&gt;</code> tag in the description pointing to what url you pass. Its better to pass the url in clear instead (using body/category/title fields).</p>
 
 <h1>Why</h1>
 
-<p>There has been a lot of call for a ifttt-webhook. I had asked about it pretty early on, but ifttt has yet to create such a channel. It was fun to build and will allow me to hookup ifttt with things like <a href="http://partychat-hooks.appspot.com/edit/h_njuwmzay" title="Partychat Hooks">partychat</a>, <a href="gh">github</a> and many other awesome services for which ifttt is yet to build a channel. You can build a postmarkapp.com like email-to-webhook service using ifttt alone.</p>
+<p>There has been a lot of <a href="http://blog.jazzychad.net/2012/08/05/ifttt-needs-webhooks-stat.html">call</a> for a ifttt-webhook. I had asked about it pretty early on, but ifttt has yet to create such a channel. It was fun to build and will allow me to hookup ifttt with things like <a href="http://partychat-hooks.appspot.com/" title="Partychat Hooks">partychat</a>, <a href="gh">github</a> and many other awesome services for which ifttt is yet to build a channel. You can build a postmarkapp.com like email-to-webhook service using ifttt alone. Wordpress seems to be the only channel on ifttt that supports custom domains, and hence can be used as a middleware.</p>
 
 <h1>Payload</h1>
 
@@ -69,37 +76,34 @@
 
 <p>To get the data from the POST request, you can use any of the following:</p>
 
-<pre><code>$data = file_get_contents('php://input'); #php
+<pre><code>$data = json_decode(file_get_contents('php://input')); #php
 data = JSON.parse(request.body.read) #ruby-sinatra
 </code></pre>
 
 <h1>Licence</h1>
 
-<p>The code is licenced under GPL. Some portions of the code are from wordpress itself. You should host this on your own server, instead of using this.</p>
+<p>Licenced under GPL. Some portions of the code are from wordpress itself. You should probably host this on your own server, instead of using <code>ifttt.captnemo.in</code>. I recommend using <a href="https://phpfog.com/?a_aid=64682331" title="My Affiliate Link">phpfog</a> for excellent php hosting.</p>
 
 <h1>Custom Use</h1>
 
 <p>Just clone the git repo to some place, and use that as the wordpress installation location in ifttt.com channel settings.</p>
-        </article>
-      </div>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/captn3m0">captn3m0</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
     </div>
-    <footer>
-      <div class="owner">
-      <p><a href="https://github.com/captn3m0" class="avatar"><img src="https://secure.gravatar.com/avatar/620d0eb7fcb87b272b387cf33e4ed314?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" width="48" height="48"/></a> <a href="https://github.com/captn3m0">captn3m0</a> maintains <a href="https://github.com/captn3m0/ifttt-webhook">Ifttt-webhook</a></p>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-5922129-9");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
 
-
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
-    </footer>
-  </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/captn3m0/ifttt-webhook/tarball/master" class="tar">tar</a><a href="https://github.com/captn3m0/ifttt-webhook/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
-  </div>
-
-  
-</body>
+  </body>
 </html>
