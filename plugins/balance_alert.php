@@ -7,9 +7,16 @@
         
         public function execute($object) {
             
-	    __log("Processed in balance alert");
-            __log("Object:" . print_r($object->description, true));
+	    $balance = "???,??";
+	    
+	    preg_match('/varasi on (\d+,\d{2}) EUR/', $object->description, $matches);
+	    
+	    if (count($matches == 2)) {
+		$balance = $matches[1];
+	    }
+	    
+	    __log("Current balance is " . $balance . " EUR");
             
-            return $object;
+            return true;
         }
     }
