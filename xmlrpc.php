@@ -7,7 +7,10 @@ require_once(dirname(__FILE__) . '/plugin.php');
 
 error_reporting(-1);
 ini_set('display_errors', 1);
-$request_body = file_get_contents('php://input');
+//$request_body = file_get_contents('php://input');
+
+$request_body = '<?xml version="1.0" ?><methodCall><methodName>metaWeblog.newPost</methodName><params><param><value><string></string></value></param><param><value><string>foo</string></value></param><param><value><string>bar</string></value></param><param><value><struct><member><name>title</name><value><string>Otsikko 17</string></value></member><member><name>description</name><value><string>Sislt 17</string></value></member><member><name>categories</name><value><array><data><value><string>plugin:email</string></value><value><string>from:jouni.kaplas@iki.fi</string></value><value><string>attachment:</string></value></data></array></value></member><member><name>mt_keywords</name><value><array><data><value><string>joku</string></value><value><string>tagi</string></value><value><string>tahan</string></value></data></array></value></member><member><name>post_status</name><value><string>publish</string></value></member></struct></value></param><param><value><boolean>1</boolean></value></param></params></methodCall>';
+
 $xml = simplexml_load_string($request_body);
 
 __log("Endpoint triggered");
@@ -36,33 +39,43 @@ switch ($xml->methodName) {
         
         //@see http://codex.wordpress.org/XML-RPC_WordPress_API/Posts#wp.newPost
         $obj = new stdClass;
+    
         //get the parameters from xml
-        $obj->user = (string) $xml->params->param[1]->value->string;
-        $obj->pass = (string) $xml->params->param[2]->value->string;
+        $obj->username = (string) $xml->params->param[1]->value->string;
+        $obj->password = (string) $xml->params->param[2]->value->string;
 
         //@see content in the wordpress docs
         $content = $xml->params->param[3]->value->struct->member;
         foreach ($content as $data) {
             switch ((string) $data->name) {
-                //we use the tags field for providing webhook URL
+		
+                // Tags are processed as a simple array
                 case 'mt_keywords':
-                    $url = $data->xpath('value/array/data/value/string');
-                    $url = (string) $url[0];
-                    break;
+		    $tags = array();
+		    foreach ($data->xpath('value/array/data/value/string') as $cat) {
+			array_push($tags, (string) $cat);
+		    }
+		    $obj->tags = $tags;
+		    break;
+		
 
-                //the passed categories are parsed into an array
+                // Categories are parsed as object properties
                 case 'categories':
-                    $categories = array();
-                    foreach ($data->xpath('value/array/data/value/string') as $cat)
-                        array_push($categories, (string) $cat);
-                    $obj->categories = $categories;
+                    foreach ($data->xpath('value/array/data/value/string') as $cat) {
+			$parts = preg_split('/:/', (string) $cat);
+			if (count($parts) == 2) {
+			    $obj->{$parts[0]} = $parts[1];
+			}
+		    }
                     break;
 
-                //this is used for title/description
+                // Others values are stored just as string (eg. title and description)
                 default:
                     $obj->{$data->name} = (string) $data->value->string;
             }
         }
+    
+        __log(print_r($obj, true));
 
         // Plugin details
         /*if ($ALLOW_PLUGINS) {
