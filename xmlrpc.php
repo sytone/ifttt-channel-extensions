@@ -2,6 +2,7 @@
 
 require_once(dirname(__FILE__) . '/settings.php');
 require_once(dirname(__FILE__) . '/log.php');
+require_once(dirname(__FILE__) . '/recipes.php');
 require_once(dirname(__FILE__) . '/plugin.php');
 
 
@@ -14,7 +15,6 @@ $request_body = '<?xml version="1.0" ?><methodCall><methodName>metaWeblog.newPos
 $xml = simplexml_load_string($request_body);
 
 __log("Endpoint triggered");
-__log($request_body);
 
 // Plugin?
 $__PLUGIN = null;
@@ -75,8 +75,6 @@ switch ($xml->methodName) {
             }
         }
     
-        __log(print_r($obj, true));
-
         // Plugin details
         /*if ($ALLOW_PLUGINS) {
             
@@ -124,10 +122,18 @@ switch ($xml->methodName) {
             //since the url was invalid, we return 400 (Bad Request)
             failure(400);
         }*/
-    success('<string>200</string>');
+        if ( select_the_right_recipe_for($obj) ) {
+            success('<string>200</string>');
+	} else {
+	    failure(400);
+	}
+        break;
 }
 
-/** Copied from wordpress */
+
+
+/** POSSIBLE RESPONSES FOR IFTTT **************************************************************/
+
 function success($innerXML) {
     
     __log("Success!");
@@ -183,28 +189,4 @@ function failure($status) {
 
 EOD;
     output($xml);
-}
-
-/** Used from drupal */
-function valid_url($url, $absolute = FALSE) {
-    if ($absolute) {
-        return (bool) preg_match("
-      /^                                                      # Start at the beginning of the text
-      (?:https?):\/\/                                # Look for ftp, http, https or feed schemes
-      (?:                                                     # Userinfo (optional) which is typically
-        (?:(?:[\w\.\-\+!$&'\(\)*\+,;=]|%[0-9a-f]{2})+:)*      # a username or a username and password
-        (?:[\w\.\-\+%!$&'\(\)*\+,;=]|%[0-9a-f]{2})+@          # combination
-      )?
-      (?:
-        (?:[a-z0-9\-\.]|%[0-9a-f]{2})+                        # A domain name or a IPv4 address
-        |(?:\[(?:[0-9a-f]{0,4}:)*(?:[0-9a-f]{0,4})\])         # or a well formed IPv6 address
-      )
-      (?::[0-9]+)?                                            # Server port number (optional)
-      (?:[\/|\?]
-        (?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})   # The path and query (optional)
-      *)?
-    $/xi", $url);
-    } else {
-        return (bool) preg_match("/^(?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})+$/i", $url);
-    }
 }

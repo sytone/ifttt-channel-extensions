@@ -5,7 +5,7 @@
      */
     abstract class Plugin {
         
-        abstract function execute($plugin, $object, $raw);
+        abstract function execute($plugin, $object);
     }
 
     /**
@@ -15,17 +15,9 @@
      * @param type $raw 
      * @return stdClass
      */
-    function executePlugin($plugin, $object, $raw) {
-        global $ALLOW_PLUGINS;
-        
-        if (!$ALLOW_PLUGINS) return $object;
-        
-        $plugins = explode(':', $plugin);
-        if (!$plugins[0] == 'plugin') return false;
-            
-        $plugin = trim($plugins[1]);
-        $plugin = preg_replace("/[^a-zA-Z0-9\s]/", "", $plugin);
-        
+    function executePlugin($plugin, $object) {
+
+        $plugin = preg_replace("/[^a-zA-Z0-9\s]/", "", $plugin);        
         $file = strtolower($plugin);
         
         if (!file_exists(dirname(__FILE__) . "/plugins/$file.php")) {
@@ -35,16 +27,14 @@
         
         require_once(dirname(__FILE__) . "/plugins/$file.php");
         
-        $plugin_class = new $plugin();
-        
-        if ($plugin_class) {
-            __log("Plugin $plugin triggered");
-            
-            return $plugin_class->execute ($plugin, $object, $raw);
-        }
-        
-        __log("Plugin is invalid");
-        
-        return false;
+	if (!class_exists($plugin)) {
+	    __log("Plugin class '".$plugin."' couldn't be loaded");
+	    return false;
+	}
+	
+	$plugin_class = new $plugin();
+	__log("Executing plugin " . $plugin);
+        return $plugin_class->execute( $plugin, $object );
+
     }
     

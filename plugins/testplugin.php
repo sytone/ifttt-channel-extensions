@@ -5,11 +5,11 @@
      */
     class TestPlugin extends Plugin {
         
-        public function execute($plugin, $object, $raw) {
+        public function execute($plugin, $object) {
             
-            error_log("Plugin: " . $plugin);
-            error_log("Object:" . print_r($object, true));
-            error_log("Raw: ". print_r($raw, true));
+	    __log("Processed in textplugin.php");
+            __log("Plugin: " . $plugin);
+            __log("Object:" . print_r($object, true));
             
             return $object;
         }
