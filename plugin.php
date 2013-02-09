@@ -5,7 +5,7 @@
      */
     abstract class Plugin {
         
-        abstract function execute($plugin, $object);
+        abstract function execute($object);
     }
 
     /**
@@ -15,26 +15,34 @@
      * @param type $raw 
      * @return stdClass
      */
-    function executePlugin($plugin, $object) {
+    function execute_plugin($plugin, $object) {
 
-        $plugin = preg_replace("/[^a-zA-Z0-9\s]/", "", $plugin);        
-        $file = strtolower($plugin);
-        
-        if (!file_exists(dirname(__FILE__) . "/plugins/$file.php")) {
-            __log("Plugin file $file.php could not be located");
+        //$plugin = preg_replace("/[^a-zA-Z0-9\s]/", "", $plugin);
+	
+	// Camel case to underscored
+	$plugin = strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_', $plugin));
+	
+	// Space to underscore
+	$plugin = preg_replace('/\s+/', '_', $plugin);
+	
+        if (!file_exists(dirname(__FILE__) . "/plugins/$plugin.php")) {
+            __log("Plugin file $plugin.php could not be located");
             return false;
         }
         
-        require_once(dirname(__FILE__) . "/plugins/$file.php");
+        require_once(dirname(__FILE__) . "/plugins/$plugin.php");
         
-	if (!class_exists($plugin)) {
-	    __log("Plugin class '".$plugin."' couldn't be loaded");
+	// Underscored to camel case
+	$class_name = str_replace(' ', '', ucwords(str_replace('_', ' ', $plugin))) . "Plugin";
+	
+	if (!class_exists($class_name)) {
+	    __log("Plugin class '" . $class_name . "' couldn't be loaded");
 	    return false;
 	}
 	
-	$plugin_class = new $plugin();
-	__log("Executing plugin " . $plugin);
-        return $plugin_class->execute( $plugin, $object );
+	$plugin_class = new $class_name();
+	__log("Executing plugin " . $class_name);
+        return $plugin_class->execute( $object );
 
     }
     
