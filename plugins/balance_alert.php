@@ -13,10 +13,12 @@
 	    
 	    if (count($matches == 2)) {
 		$balance = $matches[1];
-		return send_prowl_notification( "Ruokarahatilin saldo", $balance . " EUR" );
+		send_prowl_notification( "Ruokarahatilin saldo", $balance . " EUR" );
 	    } else {
-		return send_prowl_notification( "Ruokarahatili", "Tarkista saldo" );
+		send_prowl_notification( "Ruokarahatili", "Tarkista saldo" );
 	    }
+	    
+	    return true;
 	    
         }
     }
