@@ -1,8 +1,8 @@
 <?php
 
-    function send_prowl_notification( $subject, $body ) {
+    function send_prowl_notification( $application, $subject, $body = "" ) {
 	
-	__log("Sending prowl " . PROWL_API_KEY);
+	__log("Sending prowl notification");
 	
 	// HTTP POST code copied from http://stackoverflow.com/a/6609181
 	// and http://stackoverflow.com/a/11195757
@@ -10,7 +10,7 @@
 	$url = 'https://api.prowlapp.com/publicapi/add';
 	$data = array(
 	    'apikey' => PROWL_API_KEY,
-	    'application' => "ifttt-channel-extensions",
+	    'application' => $application,
 	    'event' => $subject,
 	    'description' => $body
 	);
