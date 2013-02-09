@@ -11,6 +11,7 @@ $request_body = file_get_contents('php://input');
 $xml = simplexml_load_string($request_body);
 
 __log("Endpoint triggered");
+__log($request_body);
 
 // Plugin?
 $__PLUGIN = null;
@@ -64,7 +65,7 @@ switch ($xml->methodName) {
         }
 
         // Plugin details
-        if ($ALLOW_PLUGINS) {
+        /*if ($ALLOW_PLUGINS) {
             
             __log("Plugins are permitted");
             
@@ -89,11 +90,11 @@ switch ($xml->methodName) {
                 __log("No valid plugin specified");
                 failure(400);
             }
-        }
+        }*/
         
         //Make the webrequest
         //Only if we have a valid url
-        if (valid_url($url, true)) {
+        /*if (valid_url($url, true)) {
             // Load Requests Library
             include('requests/Requests.php');
             Requests::register_autoloader();
@@ -109,7 +110,8 @@ switch ($xml->methodName) {
         else {
             //since the url was invalid, we return 400 (Bad Request)
             failure(400);
-        }
+        }*/
+    success('<string>200</string>');
 }
 
 /** Copied from wordpress */
