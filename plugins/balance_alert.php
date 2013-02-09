@@ -1,5 +1,7 @@
 <?php
 
+    require_once(dirname(__FILE__) . '/../tools/prowl.php');
+
     /**
      * Example webhook format plugin.
      */
@@ -7,16 +9,14 @@
         
         public function execute($object) {
             
-	    $balance = "???,??";
-	    
 	    preg_match('/varasi on (\d+,\d{2}) EUR/', $object->description, $matches);
 	    
 	    if (count($matches == 2)) {
 		$balance = $matches[1];
+		return send_prowl_notification( "Ruokarahatilin saldo", $balance . " EUR" );
+	    } else {
+		return send_prowl_notification( "Ruokarahatili", "Tarkista saldo" );
 	    }
 	    
-	    __log("Current balance is " . $balance . " EUR");
-            
-            return true;
         }
     }

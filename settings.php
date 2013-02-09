@@ -11,3 +11,7 @@
      
      // Debug options
      $DEBUG = true;
+
+     define("PROWL_API_KEY", "foobar");
+
+?>
