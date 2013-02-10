@@ -1,7 +1,7 @@
-ifttt-webhook
-=============
+IFTTT Channel Extensions
+========================
 
-A webhook middleware for the ifttt.com service
+Create your own custom IFTTT recipes/channels/actions/whatever with PHP.
 
 #How To Use
 1. Change your ifttt.com wordpress server to <http://ifttt.captnemo.in>.
