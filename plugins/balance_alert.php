@@ -11,7 +11,7 @@
             
 	    preg_match('/varasi on (\d+,\d{2}) EUR/', $object->description, $matches);
 	    
-	    if (count($matches == 2)) {
+	    if (count($matches) == 2) {
 		$balance = $matches[1];
 		send_prowl_notification( "Ruokarahatilin saldo", $balance . " EUR" );
 	    } else {
