@@ -13,5 +13,6 @@
      $DEBUG = true;
 
      define("PROWL_API_KEY", "foobar");
+     define("NOTIFY_MY_ANDROID_API_KEY", "foobar");
 
 ?>

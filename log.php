@@ -13,7 +13,12 @@
      }
 
      function __error($message) {
-	 __log("ERROR - " . $message);
+	 __log("ERROR - $message");
+     }
+
+     function __errorAndDie($message) {
+	 __error($message);
+	 die("ERROR - $message");
      }
 
 ?>
