@@ -16,6 +16,36 @@
 	    $body
 	);
     }
+    
+    function send_toasty_notification( $application, $subject, $body = "" ) {
+	__log("Sending Windows Phone ('Toasty') notification");
+	$url = "http://api.supertoasty.com/notify/".TOASTY_DEVICE_ID
+	$data = array(
+	    'title' => $subject,
+	    'text' => $body,
+	    'sender' => $application
+	);	
+	$content = http_build_query($data);
+	$options = array('http' => array(
+	    'method'  => 'POST',
+	    'header' => "Connection: close\r\n".
+			"Content-type: application/x-www-form-urlencoded\r\n".
+			"Content-Length: " . strlen($content) . "\r\n",
+	    'content' => $content
+	));
+	$context  = stream_context_create($options);
+	$result = @file_get_contents($url, false, $context);
+	
+	$success_str = 'code="200"';
+	$success = (strpos($result, $success_str) !== false);
+
+	if ($success === false) {
+	    __error("Sending message to notification server failed for some reason");
+	    return false;
+	} else {
+	    return true;
+	}
+    }    
 
     function send_android_notification( $application, $subject, $body = "" ) {
 	__log("Sending 'Notify my Android' notification");
