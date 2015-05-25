@@ -10,21 +10,90 @@ error_reporting(-1);
 ini_set('display_errors', 1);
 $request_body = file_get_contents('php://input');
 
-/*$request_body = "<?xml version=\"1.0\" ?><methodCall><methodName>metaWeblog.newPost</methodName><params><param><value><string></string></value></param><param><value><string>foo</string></value></param><param><value><string>bar</string></value></param><param><value><struct><member><name>title</name><value><string>Saldohälytys S-Pankista</string></value></member><member><name>description</name><value><string>23.7.2013 11:11:23
-				     
-				     Hyvä asiakkaamme
-				     
-				     Saldosi tilillä Ruokarahatili on alle 200,00 EUR
-				     
-				     Käyttövarasi on 163,65 EUR
-				     
-				     Tämä saldoviesti on lähetetty automaattisesti, joten ethän vastaa
-				     viestiin. Voit muokata saldoviestin lähetysasetuksia tai peruuttaa
-				     viestin tilauksen S-Pankin verkkopankissa.
-				     
-				     Ystävällisin terveisin
-				     
-				     S-Pankki</string></value></member><member><name>categories</name><value><array><data><value><string>plugin:email</string></value><value><string>from:jouni.kaplas@iki.fi</string></value></data></array></value></member><member><name>mt_keywords</name><value><array><data><value><string>IFTTT</string></value><value><string>IFTTT channel extensions</string></value><value><string>Gmail</string></value></data></array></value></member><member><name>post_status</name><value><string>publish</string></value></member></struct></value></param><param><value><boolean>1</boolean></value></param></params></methodCall>";
+/*$request_body = "<?xml version=\"1.0\" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+  <methodName>metaWeblog.newPost</methodName>
+  <params>
+    <param>
+      <value>
+        <string />
+      </value>
+    </param>
+    <param>
+      <value>
+        <string>username</string>
+      </value>
+    </param>
+    <param>
+      <value>
+        <string>password</string>
+      </value>
+    </param>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>title</name>
+            <value>
+              <string>Saldohälytys S-Pankista</string>
+            </value>
+          </member>
+          <member>
+            <name>description</name>
+            <value>
+              <string>Description String</string>
+            </value>
+          </member>
+          <member>
+            <name>categories</name>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>plugin:email</string>
+                  </value>
+                  <value>
+                    <string>from:jouni.kaplas@iki.fi</string>
+                  </value>
+                </data>
+              </array>
+            </value>
+          </member>
+          <member>
+            <name>mt_keywords</name>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>IFTTT</string>
+                  </value>
+                  <value>
+                    <string>IFTTT channel extensions</string>
+                  </value>
+                  <value>
+                    <string>Gmail</string>
+                  </value>
+                </data>
+              </array>
+            </value>
+          </member>
+          <member>
+            <name>post_status</name>
+            <value>
+              <string>publish</string>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+    <param>
+      <value>
+        <boolean>1</boolean>
+      </value>
+    </param>
+  </params>
+</methodCall>";
 */
 $xml = simplexml_load_string($request_body);
 
