@@ -3,7 +3,7 @@
     require_once(dirname(__FILE__) . '/../tools/push_notifications.php');
 
     /**
-     * Example webhook format plugin.
+     * Plugin to send a notification to toasty.
      */
     class ToastyNotificationPlugin extends Plugin {
         

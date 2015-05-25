@@ -98,7 +98,7 @@ $request_body = file_get_contents('php://input');
 $xml = simplexml_load_string($request_body);
 
 __log("Endpoint triggered");
-//__log($request_body);
+if($DEBUG) { __log($request_body); }
 
 // Plugin?
 $__PLUGIN = null;
@@ -108,18 +108,18 @@ if (!$xml) {
 }
 
 switch ($xml->methodName) {
-
     //wordpress blog verification
     case 'mt.supportedMethods':
         success('metaWeblog.getRecentPosts');
         break;
+
     //first authentication request from ifttt
     case 'metaWeblog.getRecentPosts':
         //send a blank blog response
         //this also makes sure that the channel is never triggered
         success('<array><data></data></array>');
         break;
-
+    // Process a post from ifttt andpull it apart to determine plugin and properties
     case 'metaWeblog.newPost':
         __log("Processing newpost payload");
         
@@ -137,22 +137,21 @@ switch ($xml->methodName) {
 		
                 // Tags are processed as a simple array
                 case 'mt_keywords':
-		    $tags = array();
-		    foreach ($data->xpath('value/array/data/value/string') as $cat) {
-			array_push($tags, (string) $cat);
-		    }
-		    $obj->tags = $tags;
-		    break;
+		                $tags = array();
+		                foreach ($data->xpath('value/array/data/value/string') as $cat) {
+                        array_push($tags, (string) $cat);
+                    }
+		                $obj->tags = $tags;
+		                break;
 		
-
                 // Categories are parsed as object properties
                 case 'categories':
                     foreach ($data->xpath('value/array/data/value/string') as $cat) {
-			$parts = preg_split('/:/', (string) $cat);
-			if (count($parts) == 2) {
-			    $obj->{$parts[0]} = $parts[1];
-			}
-		    }
+			                  $parts = preg_split('/:/', (string) $cat);
+			                  if (count($parts) == 2) {
+                          $obj->{$parts[0]} = $parts[1];
+                        }
+                    }
                     break;
 
                 // Others values are stored just as string (eg. title and description)
@@ -160,59 +159,12 @@ switch ($xml->methodName) {
                     $obj->{$data->name} = (string) $data->value->string;
             }
         }
-    
-        // Plugin details
-        /*if ($ALLOW_PLUGINS) {
-            
-            __log("Plugins are permitted");
-            
-            foreach ($obj->categories as $category) {
-                if (strpos($category, 'plugin:') !== false)
-                        $__PLUGIN = $category;
-            }
-            
-            // If we allow plugins, pass the constructed object to 
-            if ($__PLUGIN) {
-                $processed = executePlugin($__PLUGIN, $obj, $content);
-                if ($processed)
-                    $obj = $processed;
-                else
-                {
-                    __log("Plugin was invalid");
-                    failure(400);
-                }
-            } 
-            else
-            {
-                __log("No valid plugin specified");
-                failure(400);
-            }
-        }*/
         
-        //Make the webrequest
-        //Only if we have a valid url
-        /*if (valid_url($url, true)) {
-            // Load Requests Library
-            include('requests/Requests.php');
-            Requests::register_autoloader();
-
-            $headers = array('Content-Type' => 'application/json');
-            $response = Requests::post($url, $headers, json_encode($obj));
-
-            if ($response->success)
-                success('<string>' . $response->status_code . '</string>');
-            else
-                failure($response->status_code);
-        }
-        else {
-            //since the url was invalid, we return 400 (Bad Request)
-            failure(400);
-        }*/
         if ( select_the_right_recipe_for($obj) ) {
             success('<string>200</string>');
-	} else {
-	    failure(400);
-	}
+	      } else {
+            failure(400);
+        }
         break;
 }
 
